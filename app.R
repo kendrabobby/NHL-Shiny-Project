@@ -27,7 +27,6 @@ goalies$`Minutes Played` <- as.numeric(gsub(",", "", goalies$`Minutes Played`))
 # Start ui ----
 
 
-# Define UI for application that draws a histogram
 ui <- fluidPage(
   
   # Application title
@@ -35,7 +34,6 @@ ui <- fluidPage(
   
   
   
-  # Sidebar layout with input and output definitions ----
   
   # Sidebar panel for inputs ----
   sidebarPanel(
@@ -144,7 +142,7 @@ server <- function(input, output) {
     
   })
   
-  # 
+  # Format data table ----
   
   df_subset <- reactive({
     
@@ -178,6 +176,7 @@ server <- function(input, output) {
     }
   })
   
+  # Data for histogram ----
   
   hist_metric <- reactive({
     
@@ -221,24 +220,30 @@ server <- function(input, output) {
   })
   
   
-  hist.xlab <- reactive({
+  # Histogram axis label ----
     
-    if (input$playerType == "Skater"){
+    hist.xlab <- reactive({
       
-      return(input$metricin1)
+      if (input$playerType == "Skater"){
+        
+        return(input$metricin1)
+        
+      }
       
-    }
-    
-    if (input$playerType == "Goalie"){
-      
-      return(input$metricin2)
-      
-    }
-  })
+      if (input$playerType == "Goalie"){
+        
+        return(input$metricin2)
+        
+      }
+    })
   
+    
+  # Output table ----
+    
   output$table1 <- renderTable(df_subset() )
   
   
+  # Output histogram ----
   
   output$hist1 <- renderPlot(
     
