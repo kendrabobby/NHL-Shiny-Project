@@ -71,9 +71,10 @@ ui <- fluidPage(
       
       column(12,
              
-             sliderInput("slider1", label = h3("Games Played"), min = 0,
-                         max = max(skaters$Games), value = c(0, max(skaters$Games)))
+             sliderInput("slider1_sk", label = h3("Games Played"), min = min(skaters$Games),
+                         max = max(skaters$Games), value = c( min(skaters$Games), max(skaters$Games) ) )
       ),
+      
       
       varSelectInput("metricin1", "Metric", skaters[,c(4:17)], selected = "Games", multiple=FALSE)
     ),
@@ -97,14 +98,19 @@ ui <- fluidPage(
       
       column(12,
              
-             sliderInput("slider2", label = h3("Games Played"), min = 0,
+             sliderInput("slider1_g", label = h3("Games Played"), min = 0,
                          max = max(goalies$Games), value = c(0, max(goalies$Games)))
       ),
       
+      column(12,
+             
+             sliderInput("slider2_g", label = h3("Wins"), min = min(goalies$Wins),
+                         max = max(goalies$Wins), value = c( min(goalies$Wins), max(goalies$Wins) ) )
+      ),
       
       varSelectInput("metricin2", "Metric", goalies[,c(3:13)], selected = "Games", multiple=FALSE)    
       
-    )
+      )
   ),  
   
   # Main panel for output, on right ----
@@ -148,7 +154,7 @@ server <- function(input, output) {
     
     if (input$playerType == "Skater"){
       
-      b1 <- input$slider1
+      b1 <- input$slider1_sk
       
       a <- subset(datasetInput(), Team %in% input$teamin1) 
       
@@ -164,11 +170,15 @@ server <- function(input, output) {
     
     if (input$playerType == "Goalie"){
       
-      b2 <- input$slider2
+      b1 <- input$slider1_g
+      
+      b2 <- input$slider2_g
       
       a <- subset(datasetInput(), Team %in% input$teamin2)
       
-      a <- subset(a, Games >= b2[1] & Games <= b2[2])
+      a <- subset(a, Games >= b1[1] & Games <= b1[2])
+      
+      a <- subset(a, Wins >= b2[1] & Wins <= b2[2])
       
       a <- a %>% dplyr::arrange(!!input$metricin2, -Games)
       
@@ -182,7 +192,7 @@ server <- function(input, output) {
     
     if (input$playerType == "Skater"){
       
-      b1 <- input$slider1
+      b1 <- input$slider1_sk
       
       a <- subset(datasetInput(), Team %in% input$teamin1) 
       
@@ -202,11 +212,15 @@ server <- function(input, output) {
     
     if (input$playerType == "Goalie"){
       
-      b2 <- input$slider2
+      b1 <- input$slider1_g
+      
+      b2 <- input$slider2_g
       
       a <- subset(datasetInput(), Team %in% input$teamin2)
       
-      a <- subset(a, Games >= b2[1] & Games <= b2[2])
+      a <- subset(a, Games >= b1[1] & Games <= b1[2])
+      
+      a <- subset(a, Wins >= b2[1] & Wins <= b2[2])
       
       a1 <- a %>% dplyr::select(!!input$metricin2) %>% unlist() %>% as.numeric()
       
