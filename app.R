@@ -30,7 +30,7 @@ goalies$`Minutes Played` <- as.numeric(gsub(",", "", goalies$`Minutes Played`))
 ui <- fluidPage(
   
   # Application title
-  titlePanel("NHL Player Selection"), 
+  titlePanel("NHL Player Statistics"), 
   
   
   
@@ -110,7 +110,7 @@ ui <- fluidPage(
   # Main panel for output, on right ----
   mainPanel(
     
-    h4("Available players:"),
+    h4("Players:"),
     div( tableOutput("table1"),
          style = 'height: 400px; overflow-y:scroll'
     ),
